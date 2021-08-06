@@ -10,21 +10,12 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
-
-// TODO BAD CODE
 public class PageGenerator {
-    private static PageGenerator pageGenerator;
-    private final Configuration configuration = new Configuration();
 
-    public static PageGenerator instance() {
-        if (pageGenerator == null)
-            pageGenerator = new PageGenerator();
-        return pageGenerator;
-    }
+    private final Configuration configuration = new Configuration();
 
     public String getPage(String filename, Map<String, ?> data) {
         Writer stream = new StringWriter();
-
         try {
             configuration.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
             configuration.setDefaultEncoding("UTF-8");
@@ -36,6 +27,5 @@ public class PageGenerator {
             throw new RuntimeException(e);
         }
         return stream.toString();
-
     }
 }

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product:</title>
+</head>
+<body>
+    <form action="/products/edit" method="post">
+        <div>ID:</div>
+        <input type="text" name="id" value="${product.id}" readonly/>
+        <br/><br/>
+
+        <div>Name:</div>
+        <input type="text" name="name" value="${product.name}"/>
+        <br/><br/>
+
+        <div>Price:</div>
+        <input type="text" name="price" value="${product.price}"/>
+        <br/><br/>
+
+        <input type="submit" value="Submit"/>
+    </form>
+</body>
+</html>
