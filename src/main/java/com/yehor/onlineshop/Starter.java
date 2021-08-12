@@ -1,10 +1,10 @@
 package com.yehor.onlineshop;
 
-import com.yehor.onlineshop.dao.ProductDao;
 import com.yehor.onlineshop.dao.jdbc.ConnectionFactory;
 import com.yehor.onlineshop.dao.jdbc.JdbcProductDao;
 import com.yehor.onlineshop.service.ProductService;
 import com.yehor.onlineshop.util.CachedPropertiesReader;
+import com.yehor.onlineshop.util.PropertiesReader;
 import com.yehor.onlineshop.web.AddProductServlet;
 import com.yehor.onlineshop.web.EditProductServlet;
 import com.yehor.onlineshop.web.GetAllProductsServlet;
@@ -18,8 +18,8 @@ import java.util.Properties;
 public class Starter {
     public static void main(String[] args) throws Exception {
         // properties
-        CachedPropertiesReader cachedPropertiesReader = new CachedPropertiesReader("application.properties");
-        Properties properties = cachedPropertiesReader.getCachedProperties();
+        PropertiesReader cachedPropertiesReader = new CachedPropertiesReader("application.properties");
+        Properties properties = cachedPropertiesReader.getProperties();
 
         // dao
         ConnectionFactory connectionFactory = new ConnectionFactory(properties);

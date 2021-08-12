@@ -49,17 +49,16 @@
         <tbody>
         <#list products as product>
         <tr>
-            <td><input type="text" name="id" value="${product.id}" readonly/></td>
-            <td><input type="text" name="name" value="${product.name}" readonly/></td>
-            <td><input type="text" name="price" value="${product.price}" readonly/></td>
+            <td>${product.id}</td>
+            <td>${product.name}</td>
+            <td>${product.price}</td>
             <td>
-                <input type="hidden" name="id" value="${product.id}"/>
                 <a class="nav-link" href="/products/edit?id=${product.id}">Edit</a>
             </td>
             <td>
                 <form action="/products/remove" method="post">
                     <input type="hidden" name="id" value="${product.id}"/>
-                    <button type="submit">Remove</button>
+                    <button>Remove</button>
                 </form>
             </td>
         </tr>
