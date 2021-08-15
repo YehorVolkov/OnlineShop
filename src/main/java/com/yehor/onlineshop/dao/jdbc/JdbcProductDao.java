@@ -3,6 +3,7 @@ package com.yehor.onlineshop.dao.jdbc;
 import com.yehor.onlineshop.dao.ProductDao;
 import com.yehor.onlineshop.entity.Product;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +21,15 @@ public class JdbcProductDao implements ProductDao {
     private static final String FIND_PRODUCT_QUERY = "SELECT id, name, price from products WHERE id = %d";
     private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET name = '%s', price = '%.2f' WHERE id = %d";
 
-    private final ConnectionFactory connectionFactory;
+    private final DataSource dataSource;
 
-    public JdbcProductDao(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    public JdbcProductDao(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
     public Iterable<Product> findAll() {
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(FIND_ALL_QUERY)) {
             List<Product> products = new ArrayList<>();
@@ -44,7 +45,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public void add(String name, double price) {
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             String query = String.format(Locale.US, ADD_PRODUCT_QUERY, name, price); // TODO Locale.US - bad solution to comma in statement?
             statement.executeUpdate(query);
@@ -55,7 +56,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public void remove(long id) {
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             String query = String.format(DELETE_PRODUCT_QUERY, id);
             statement.executeUpdate(query);
@@ -66,7 +67,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public Product getProduct(long id) {
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(String.format(FIND_PRODUCT_QUERY, id))) {
             resultSet.next();
@@ -78,7 +79,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public void updateProduct(long id, String name, double price) {
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             String query = String.format(Locale.US, UPDATE_PRODUCT_QUERY, name, price, id); // TODO Locale.US - bad solution to comma in statement?
             statement.executeUpdate(query);

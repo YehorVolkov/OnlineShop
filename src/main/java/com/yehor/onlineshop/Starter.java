@@ -1,5 +1,6 @@
 package com.yehor.onlineshop;
 
+import com.yehor.onlineshop.dao.ProductDao;
 import com.yehor.onlineshop.dao.jdbc.ConnectionFactory;
 import com.yehor.onlineshop.dao.jdbc.JdbcProductDao;
 import com.yehor.onlineshop.service.ProductService;
@@ -17,21 +18,15 @@ import java.util.Properties;
 
 public class Starter {
     public static void main(String[] args) throws Exception {
-        // properties
         PropertiesReader cachedPropertiesReader = new CachedPropertiesReader("application.properties");
         Properties properties = cachedPropertiesReader.getProperties();
 
-        // dao
         ConnectionFactory connectionFactory = new ConnectionFactory(properties);
-        JdbcProductDao jdbcProductDao = new JdbcProductDao(connectionFactory);
-
-        // service
+        ProductDao jdbcProductDao = new JdbcProductDao(connectionFactory);
         ProductService productService = new ProductService(jdbcProductDao);
 
-        // config web server
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
-        // servlet 1
         GetAllProductsServlet getAllProductsServlet = new GetAllProductsServlet(productService);
         ServletHolder getAllProductsServletHolder = new ServletHolder(getAllProductsServlet);
         context.addServlet(getAllProductsServletHolder, "/");
@@ -52,6 +47,5 @@ public class Starter {
         Server server = new Server(8080);
         server.setHandler(context);
         server.start();
-
     }
 }
