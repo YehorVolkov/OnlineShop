@@ -7,7 +7,8 @@
 <body>
     <form action="/products/edit" method="post">
         <div>ID:</div>
-        <input type="text" name="id" value="${product.id}" readonly/>
+        ${product.id}
+        <input type="hidden" name="id" value="${product.id}"/>
         <br/><br/>
 
         <div>Name:</div>
