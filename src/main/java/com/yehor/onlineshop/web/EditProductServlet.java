@@ -33,7 +33,7 @@ public class EditProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         long id = Long.parseLong(req.getParameter("id"));
         String name = req.getParameter("name");
-        double price = Double.parseDouble(req.getParameter("price"));
+        double price = Double.parseDouble(req.getParameter("price").replaceAll(",", ""));
         this.productService.updateProduct(id, name, price);
         resp.sendRedirect(req.getContextPath() + "/");
     }

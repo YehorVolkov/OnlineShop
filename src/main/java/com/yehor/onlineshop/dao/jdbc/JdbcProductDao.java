@@ -15,10 +15,10 @@ public class JdbcProductDao implements ProductDao {
     private static final ProductRowMapper PRODUCT_ROW_MAPPER = new ProductRowMapper();
 
     private static final String FIND_ALL_QUERY = "SELECT id, name, price from products";
-    private static final String ADD_PRODUCT_QUERY = "INSERT INTO products (name, price) VALUES ('%s', %f)";
+    private static final String ADD_PRODUCT_QUERY = "INSERT INTO products (name, price) VALUES ('%s', %.2f)";
     private static final String DELETE_PRODUCT_QUERY = "DELETE FROM products WHERE id = %d";
     private static final String FIND_PRODUCT_QUERY = "SELECT id, name, price from products WHERE id = %d";
-    private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET name = '%s', price = '%f' WHERE id = %d";
+    private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET name = '%s', price = '%.2f' WHERE id = %d";
 
     private final ConnectionFactory connectionFactory;
 
@@ -46,7 +46,7 @@ public class JdbcProductDao implements ProductDao {
     public void add(String name, double price) {
         try (Connection connection = connectionFactory.getConnection();
              Statement statement = connection.createStatement()) {
-            String query = String.format(Locale.US, ADD_PRODUCT_QUERY, name, price);
+            String query = String.format(Locale.US, ADD_PRODUCT_QUERY, name, price); // TODO Locale.US - bad solution to comma in statement?
             statement.executeUpdate(query);
         } catch (SQLException e) {
             throw new RuntimeException("Cannot insert product to db", e);
@@ -80,7 +80,7 @@ public class JdbcProductDao implements ProductDao {
     public void updateProduct(long id, String name, double price) {
         try (Connection connection = connectionFactory.getConnection();
              Statement statement = connection.createStatement()) {
-            String query = String.format(Locale.US, UPDATE_PRODUCT_QUERY, name, price, id);
+            String query = String.format(Locale.US, UPDATE_PRODUCT_QUERY, name, price, id); // TODO Locale.US - bad solution to comma in statement?
             statement.executeUpdate(query);
         } catch (SQLException e) {
             throw new RuntimeException("Cannot update product in db", e);
