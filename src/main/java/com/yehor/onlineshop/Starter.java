@@ -6,14 +6,14 @@ import com.yehor.onlineshop.dao.jdbc.JdbcProductDao;
 import com.yehor.onlineshop.service.ProductService;
 import com.yehor.onlineshop.util.CachedPropertiesReader;
 import com.yehor.onlineshop.util.PropertiesReader;
-import com.yehor.onlineshop.web.AddProductServlet;
-import com.yehor.onlineshop.web.EditProductServlet;
-import com.yehor.onlineshop.web.GetAllProductsServlet;
-import com.yehor.onlineshop.web.RemoveProductServlet;
+import com.yehor.onlineshop.web.servlet.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.h2.jdbcx.JdbcDataSource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class Starter {
@@ -21,28 +21,29 @@ public class Starter {
         PropertiesReader cachedPropertiesReader = new CachedPropertiesReader("application.properties");
         Properties properties = cachedPropertiesReader.getProperties();
 
-        ConnectionFactory connectionFactory = new ConnectionFactory(properties);
-        ProductDao jdbcProductDao = new JdbcProductDao(connectionFactory);
+//        ConnectionFactory connectionFactory = new ConnectionFactory(properties);
+        JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setURL(properties.getProperty("db_url"));
+        dataSource.setUser(properties.getProperty("user"));
+        dataSource.setPassword(properties.getProperty("password"));
+        ProductDao jdbcProductDao = new JdbcProductDao(dataSource);
         ProductService productService = new ProductService(jdbcProductDao);
+
+        List<String> sessionList = new ArrayList<>();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
-        GetAllProductsServlet getAllProductsServlet = new GetAllProductsServlet(productService);
-        ServletHolder getAllProductsServletHolder = new ServletHolder(getAllProductsServlet);
+        ServletHolder getAllProductsServletHolder = new ServletHolder(new GetAllProductsServlet(productService, sessionList));
         context.addServlet(getAllProductsServletHolder, "/");
         context.addServlet(getAllProductsServletHolder, "/products");
 
-        AddProductServlet addProductServlet = new AddProductServlet(productService);
-        ServletHolder addProductServletHolder = new ServletHolder(addProductServlet);
-        context.addServlet(addProductServletHolder, "/products/add");
+        context.addServlet(new ServletHolder(new AddProductServlet(productService)), "/products/add");
 
-        EditProductServlet editProductServlet = new EditProductServlet(productService);
-        ServletHolder editProductServletHolder = new ServletHolder(editProductServlet);
-        context.addServlet(editProductServletHolder, "/products/edit");
+        context.addServlet(new ServletHolder(new EditProductServlet(productService)), "/products/edit");
 
-        RemoveProductServlet removeProductServlet = new RemoveProductServlet(productService);
-        ServletHolder removeProductServletHolder = new ServletHolder(removeProductServlet);
-        context.addServlet(removeProductServletHolder, "/products/remove");
+        context.addServlet(new ServletHolder(new RemoveProductServlet(productService)), "/products/remove");
+
+        context.addServlet(new ServletHolder(new LoginServlet(sessionList)), "/login");
 
         Server server = new Server(8080);
         server.setHandler(context);
