@@ -1,6 +1,7 @@
-package com.yehor.onlineshop.web;
+package com.yehor.onlineshop.web.servlet;
 
 import com.yehor.onlineshop.service.ProductService;
+import com.yehor.onlineshop.web.PageGenerator;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

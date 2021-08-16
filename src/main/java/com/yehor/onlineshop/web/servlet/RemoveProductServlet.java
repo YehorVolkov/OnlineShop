@@ -1,4 +1,4 @@
-package com.yehor.onlineshop.web;
+package com.yehor.onlineshop.web.servlet;
 
 import com.yehor.onlineshop.service.ProductService;
 
