@@ -34,9 +34,13 @@ public class EditProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         long id = Long.parseLong(req.getParameter("id"));
         String name = req.getParameter("name");
-        double price = Double.parseDouble(req.getParameter("price").replaceAll(",", ""));
-        String description = req.getParameter("description");
-        this.productService.updateProduct(id, name, price, description);
-        resp.sendRedirect(req.getContextPath() + "/");
+        if (req.getParameter("price").isEmpty()) { // TODO ok to do this logic here? Maybe better to somehow implement it in Service layer?
+            resp.sendRedirect("/products/edit?id=" + req.getParameter("id"));
+        } else {
+            double price = Double.parseDouble(req.getParameter("price").replaceAll(",", ""));
+            String description = req.getParameter("description");
+            this.productService.updateProduct(id, name, price, description);
+            resp.sendRedirect(req.getContextPath() + "/");
+        }
     }
 }
