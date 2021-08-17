@@ -25,10 +25,16 @@ public class AddProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String name = req.getParameter("name");
-        double price = Double.parseDouble(req.getParameter("price"));
-        String description = req.getParameter("description");
-        this.productService.addProduct(name, price, description);
-        resp.sendRedirect(req.getContextPath() + "/");
+        String priceString = req.getParameter("price");
+
+        if (name.isEmpty() || priceString.isEmpty()) { // TODO ok to do this logic here? Maybe better to somehow implement it in Service layer?
+            resp.sendRedirect("/products/add");
+        } else {
+            double price = Double.parseDouble(priceString.replaceAll(",", ""));
+            String description = req.getParameter("description");
+            this.productService.addProduct(name, price, description);
+            resp.sendRedirect(req.getContextPath() + "/");
+        }
     }
 }
 

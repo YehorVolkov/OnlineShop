@@ -35,6 +35,7 @@ public class EditProductServlet extends HttpServlet {
         long id = Long.parseLong(req.getParameter("id"));
         String name = req.getParameter("name");
         String priceString = req.getParameter("price");
+
         if (name.isEmpty() || priceString.isEmpty()) { // TODO ok to do this logic here? Maybe better to somehow implement it in Service layer?
             resp.sendRedirect("/products/edit?id=" + req.getParameter("id"));
         } else {
