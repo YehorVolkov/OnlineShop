@@ -34,7 +34,7 @@ public class Starter {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
         ServletHolder getAllProductsServletHolder = new ServletHolder(new GetAllProductsServlet(productService, sessionList));
-        context.addServlet(getAllProductsServletHolder, "/");
+        context.addServlet(getAllProductsServletHolder, "");
         context.addServlet(getAllProductsServletHolder, "/products");
 
         context.addServlet(new ServletHolder(new AddProductServlet(productService)), "/products/add");
