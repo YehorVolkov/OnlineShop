@@ -26,7 +26,8 @@ public class AddProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String name = req.getParameter("name");
         double price = Double.parseDouble(req.getParameter("price"));
-        this.productService.addProduct(name, price);
+        String description = req.getParameter("description");
+        this.productService.addProduct(name, price, description);
         resp.sendRedirect(req.getContextPath() + "/");
     }
 }

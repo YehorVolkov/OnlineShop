@@ -15,16 +15,16 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    public void addProduct(String name, double price) {
-        productDao.add(name, price);
+    public void addProduct(String name, double price, String description) {
+        productDao.add(name, price, description);
     }
 
     public Product getProduct(long id) {
         return productDao.getProduct(id);
     }
 
-    public void updateProduct(long id, String name, double price) {
-        productDao.updateProduct(id, name, price);
+    public void updateProduct(long id, String name, double price, String description) {
+        productDao.updateProduct(id, name, price, description);
     }
 
     public void removeProduct(long id) {

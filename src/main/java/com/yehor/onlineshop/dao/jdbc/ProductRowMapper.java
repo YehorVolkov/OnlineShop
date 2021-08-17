@@ -10,11 +10,13 @@ public class ProductRowMapper {
         long id = resultSet.getLong("id");
         String name = resultSet.getString("name");
         double price = resultSet.getDouble("price");
+        String description = resultSet.getString("description");
 
         return Product.builder()
                 .id(id)
                 .name(name)
                 .price(price)
+                .description(description)
                 .build();
     }
 }

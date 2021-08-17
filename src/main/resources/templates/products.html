@@ -43,6 +43,7 @@
             <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col">Price</th>
+            <th scope="col">Description</th>
         </tr>
         </thead>
 
@@ -52,6 +53,7 @@
             <td>${product.id}</td>
             <td>${product.name}</td>
             <td>${product.price}</td>
+            <td>${product.description!""}</td>
             <td>
                 <a class="nav-link" href="/products/edit?id=${product.id}">Edit</a>
             </td>

@@ -15,11 +15,11 @@ import java.util.Locale;
 public class JdbcProductDao implements ProductDao {
     private static final ProductRowMapper PRODUCT_ROW_MAPPER = new ProductRowMapper();
 
-    private static final String FIND_ALL_QUERY = "SELECT id, name, price from products";
-    private static final String ADD_PRODUCT_QUERY = "INSERT INTO products (name, price) VALUES ('%s', %.2f)";
+    private static final String FIND_ALL_QUERY = "SELECT id, name, price, description from products";
+    private static final String ADD_PRODUCT_QUERY = "INSERT INTO products (name, price, description) VALUES ('%s', %.2f, '%s')";
     private static final String DELETE_PRODUCT_QUERY = "DELETE FROM products WHERE id = %d";
-    private static final String FIND_PRODUCT_QUERY = "SELECT id, name, price from products WHERE id = %d";
-    private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET name = '%s', price = '%.2f' WHERE id = %d";
+    private static final String FIND_PRODUCT_QUERY = "SELECT id, name, price, description from products WHERE id = %d";
+    private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET name = '%s', price = '%.2f', description = '%s' WHERE id = %d";
 
     private final DataSource dataSource;
 
@@ -44,10 +44,10 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public void add(String name, double price) {
+    public void add(String name, double price, String description) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            String query = String.format(Locale.US, ADD_PRODUCT_QUERY, name, price); // TODO Locale.US - bad solution to comma in statement?
+            String query = String.format(Locale.US, ADD_PRODUCT_QUERY, name, price, description); // TODO Locale.US - bad solution to comma in statement?
             statement.executeUpdate(query);
         } catch (SQLException e) {
             throw new RuntimeException("Cannot insert product to db", e);
@@ -78,10 +78,10 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public void updateProduct(long id, String name, double price) {
+    public void updateProduct(long id, String name, double price, String description) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            String query = String.format(Locale.US, UPDATE_PRODUCT_QUERY, name, price, id); // TODO Locale.US - bad solution to comma in statement?
+            String query = String.format(Locale.US, UPDATE_PRODUCT_QUERY, name, price, description, id); // TODO Locale.US - bad solution to comma in statement?
             statement.executeUpdate(query);
         } catch (SQLException e) {
             throw new RuntimeException("Cannot update product in db", e);

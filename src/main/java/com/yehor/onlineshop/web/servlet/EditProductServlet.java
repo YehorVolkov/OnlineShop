@@ -35,7 +35,8 @@ public class EditProductServlet extends HttpServlet {
         long id = Long.parseLong(req.getParameter("id"));
         String name = req.getParameter("name");
         double price = Double.parseDouble(req.getParameter("price").replaceAll(",", ""));
-        this.productService.updateProduct(id, name, price);
+        String description = req.getParameter("description");
+        this.productService.updateProduct(id, name, price, description);
         resp.sendRedirect(req.getContextPath() + "/");
     }
 }
