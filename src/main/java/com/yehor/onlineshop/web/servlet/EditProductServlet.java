@@ -34,10 +34,11 @@ public class EditProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         long id = Long.parseLong(req.getParameter("id"));
         String name = req.getParameter("name");
-        if (req.getParameter("price").isEmpty()) { // TODO ok to do this logic here? Maybe better to somehow implement it in Service layer?
+        String priceString = req.getParameter("price");
+        if (name.isEmpty() || priceString.isEmpty()) { // TODO ok to do this logic here? Maybe better to somehow implement it in Service layer?
             resp.sendRedirect("/products/edit?id=" + req.getParameter("id"));
         } else {
-            double price = Double.parseDouble(req.getParameter("price").replaceAll(",", ""));
+            double price = Double.parseDouble(priceString.replaceAll(",", ""));
             String description = req.getParameter("description");
             this.productService.updateProduct(id, name, price, description);
             resp.sendRedirect(req.getContextPath() + "/");
