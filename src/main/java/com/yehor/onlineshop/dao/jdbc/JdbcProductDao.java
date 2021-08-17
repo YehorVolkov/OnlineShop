@@ -15,10 +15,10 @@ import java.util.Locale;
 public class JdbcProductDao implements ProductDao {
     private static final ProductRowMapper PRODUCT_ROW_MAPPER = new ProductRowMapper();
 
-    private static final String FIND_ALL_QUERY = "SELECT id, name, price, description from products";
+    private static final String FIND_ALL_QUERY = "SELECT id, name, price, description FROM products";
     private static final String ADD_PRODUCT_QUERY = "INSERT INTO products (name, price, description) VALUES ('%s', %.2f, '%s')";
     private static final String DELETE_PRODUCT_QUERY = "DELETE FROM products WHERE id = %d";
-    private static final String FIND_PRODUCT_QUERY = "SELECT id, name, price, description from products WHERE id = %d";
+    private static final String GET_PRODUCT_QUERY = "SELECT id, name, price, description from products WHERE id = %d";
     private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET name = '%s', price = '%.2f', description = '%s' WHERE id = %d";
 
     private final DataSource dataSource;
@@ -55,6 +55,35 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    public Iterable<Product> findProduct(String query) {
+        String[] queryWords = query.split(" ");
+
+        // TODO BAD DESIGN!!!
+        StringBuilder searchQuery = new StringBuilder("SELECT id, name, price, description FROM products WHERE");
+
+        for (String queryWord : queryWords) {
+            searchQuery.append(" name LIKE '" + queryWord + "' OR ");
+        }
+        for (String queryWord : queryWords) {
+            searchQuery.append(" description LIKE '" + queryWord + "' OR ");
+        }
+        searchQuery.delete(searchQuery.length() - 4, searchQuery.length());
+
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(searchQuery.toString())) {
+            List<Product> products = new ArrayList<>();
+            while (resultSet.next()) {
+                Product product = PRODUCT_ROW_MAPPER.mapRow(resultSet);
+                products.add(product);
+            }
+            return products;
+        } catch (SQLException e) {
+            throw new RuntimeException("Cannot get products from db", e);
+        }
+    }
+
+    @Override
     public void remove(long id) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -69,7 +98,7 @@ public class JdbcProductDao implements ProductDao {
     public Product getProduct(long id) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(String.format(FIND_PRODUCT_QUERY, id))) {
+             ResultSet resultSet = statement.executeQuery(String.format(GET_PRODUCT_QUERY, id))) {
             resultSet.next();
             return PRODUCT_ROW_MAPPER.mapRow(resultSet);
         } catch (SQLException e) {

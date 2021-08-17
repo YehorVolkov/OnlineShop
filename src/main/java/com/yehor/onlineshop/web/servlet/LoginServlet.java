@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String page = new PageGenerator().getPage("login.html", null);
+        String page = new PageGenerator().getPage("login.html");
         resp.getWriter().println(page);
     }
 

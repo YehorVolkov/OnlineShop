@@ -28,4 +28,8 @@ public class PageGenerator {
         }
         return stream.toString();
     }
+
+    public String getPage(String filename) {
+        return getPage(filename, null);
+    }
 }

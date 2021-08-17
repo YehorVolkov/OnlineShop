@@ -39,6 +39,8 @@ public class Starter {
 
         context.addServlet(new ServletHolder(new AddProductServlet(productService)), "/products/add");
 
+        context.addServlet(new ServletHolder(new FindProductServlet(productService)), "/products/find");
+
         context.addServlet(new ServletHolder(new EditProductServlet(productService)), "/products/edit");
 
         context.addServlet(new ServletHolder(new RemoveProductServlet(productService)), "/products/remove");

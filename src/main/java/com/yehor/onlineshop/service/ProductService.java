@@ -19,6 +19,10 @@ public class ProductService {
         productDao.add(name, price, description);
     }
 
+    public Iterable<Product> findProduct(String query) {
+        return productDao.findProduct(query);
+    }
+
     public Product getProduct(long id) {
         return productDao.getProduct(id);
     }
