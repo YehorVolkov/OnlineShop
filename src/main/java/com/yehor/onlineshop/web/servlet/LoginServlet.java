@@ -1,21 +1,19 @@
 package com.yehor.onlineshop.web.servlet;
 
+import com.yehor.onlineshop.service.SecurityService;
 import com.yehor.onlineshop.web.PageGenerator;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 
 public class LoginServlet extends HttpServlet {
 
-    private final List<String> sessionList;
+    private final SecurityService securityService;
 
-    public LoginServlet(List<String> sessionList) {
-        this.sessionList = sessionList;
+    public LoginServlet(SecurityService securityService) {
+        this.securityService = securityService;
     }
 
     @Override
@@ -26,10 +24,15 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String uuid = UUID.randomUUID().toString();
-        sessionList.add(uuid);
-        Cookie cookie = new Cookie("user-token", uuid);
-        resp.addCookie(cookie);
-        resp.sendRedirect("/products");
+
+        String userName = req.getParameter("username");
+        String password = req.getParameter("password");
+
+        if (userName.isEmpty() || password.isEmpty() || !securityService.credentialsValid(userName, password)) {
+            resp.sendRedirect("/login");
+        } else {
+            resp.addCookie(securityService.createCookie());
+            resp.sendRedirect("/products");
+        }
     }
 }
