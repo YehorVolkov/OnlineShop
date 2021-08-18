@@ -22,6 +22,7 @@ public class SecurityService {
     @SneakyThrows
     public boolean credentialsValid(String username, String password) {
         // TODO should this logic be here?
+        // TODO add salt
         MessageDigest md = MessageDigest.getInstance("MD5"); // TODO SneakyThrows?
         md.update(password.getBytes());
         byte[] digest = md.digest();
@@ -33,7 +34,7 @@ public class SecurityService {
         String uuid = UUID.randomUUID().toString();
         sessionList.add(uuid);
         Cookie cookie = new Cookie("user-token", uuid);
-        cookie.setMaxAge(180); // TODO magic number?
+        cookie.setMaxAge(180); // TODO magic number
         return cookie;
     }
 

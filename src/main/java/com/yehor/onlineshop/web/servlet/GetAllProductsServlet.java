@@ -25,15 +25,15 @@ public class GetAllProductsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!securityService.cookieExists(req.getCookies())) {
-            resp.sendRedirect("/login");
-        } else {
-            Iterable<Product> dbProducts = this.productService.findAll();
-
-            Map<String, Object> parametersMap = new HashMap<>();
-            parametersMap.put("products", dbProducts);
-
-            String page = new PageGenerator().getPage("products.html", parametersMap);
-            resp.getWriter().println(page);
+            // TODO CAN WE CHECK IF USER IS LOGGED IN BY CHECKING COOKIE????????????????
         }
+        Iterable<Product> dbProducts = this.productService.findAll();
+
+        Map<String, Object> parametersMap = new HashMap<>();
+        parametersMap.put("products", dbProducts);
+        parametersMap.put("isUserLoggedIn", true); // TODO hardcode
+
+        String page = new PageGenerator().getPage("products.html", parametersMap);
+        resp.getWriter().println(page);
     }
 }

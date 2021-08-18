@@ -26,6 +26,17 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/products/find">Find product</a>
+                </li>
+                <#if isUserLoggedIn == true>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products/add">Add product</a>
+                    </li>
+                </#if>
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
             </ul>
         </div>
     </div>
@@ -51,15 +62,17 @@
             <td>${product.name}</td>
             <td>${product.price}</td>
             <td>${product.description!""}</td>
-            <td>
-                <a class="nav-link" href="/products/edit?id=${product.id}">Edit</a>
-            </td>
-            <td>
-                <form action="/products/remove" method="post">
-                    <input type="hidden" name="id" value="${product.id}"/>
-                    <button>Remove</button>
-                </form>
-            </td>
+            <#if isUserLoggedIn == true>
+                <td>
+                    <a class="nav-link" href="/products/edit?id=${product.id}">Edit</a>
+                </td>
+                <td>
+                    <form action="/products/remove" method="post">
+                        <input type="hidden" name="id" value="${product.id}"/>
+                        <button>Remove</button>
+                    </form>
+                </td>
+            </#if>
         </tr>
         </#list>
         </tbody>
