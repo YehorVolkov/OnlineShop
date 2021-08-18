@@ -24,14 +24,15 @@ public class GetAllProductsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (!securityService.cookieExists(req.getCookies())) {
-            // TODO CAN WE CHECK IF USER IS LOGGED IN BY CHECKING COOKIE????????????????
-        }
-        Iterable<Product> dbProducts = this.productService.findAll();
-
         Map<String, Object> parametersMap = new HashMap<>();
+        Iterable<Product> dbProducts = this.productService.findAll();
         parametersMap.put("products", dbProducts);
-        parametersMap.put("isUserLoggedIn", true); // TODO hardcode
+        if (securityService.cookieExists(req.getCookies())) { // TODO two services in one servlet method!
+            // TODO ok to check if user is logged in via cookies?
+            parametersMap.put("isUserLoggedIn", true);
+        } else {
+            parametersMap.put("isUserLoggedIn", false);
+        }
 
         String page = new PageGenerator().getPage("products.html", parametersMap);
         resp.getWriter().println(page);
