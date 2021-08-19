@@ -2,7 +2,6 @@ package com.yehor.onlineshop.web.servlet;
 
 import com.yehor.onlineshop.entity.Product;
 import com.yehor.onlineshop.service.ProductService;
-import com.yehor.onlineshop.service.SecurityService;
 import com.yehor.onlineshop.web.PageGenerator;
 
 import javax.servlet.http.HttpServlet;
@@ -15,11 +14,9 @@ import java.util.Map;
 public class GetAllProductsServlet extends HttpServlet {
 
     private final ProductService productService;
-    private final SecurityService securityService;
 
-    public GetAllProductsServlet(ProductService productService, SecurityService securityService) {
+    public GetAllProductsServlet(ProductService productService) {
         this.productService = productService;
-        this.securityService = securityService;
     }
 
     @Override
@@ -27,14 +24,8 @@ public class GetAllProductsServlet extends HttpServlet {
         Map<String, Object> parametersMap = new HashMap<>();
         Iterable<Product> dbProducts = this.productService.findAll();
         parametersMap.put("products", dbProducts);
-        if (securityService.cookieExists(req.getCookies())) { // TODO two services in one servlet method!
-            // TODO ok to check if user is logged in via cookies?
-            parametersMap.put("isUserLoggedIn", true);
-        } else {
-            parametersMap.put("isUserLoggedIn", false);
-        }
 
-        String page = new PageGenerator().getPage("products.html", parametersMap);
+        String page = PageGenerator.getPage("products.html", parametersMap);
         resp.getWriter().println(page);
     }
 }

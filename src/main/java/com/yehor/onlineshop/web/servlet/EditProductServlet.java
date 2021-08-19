@@ -26,7 +26,7 @@ public class EditProductServlet extends HttpServlet {
         Map<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("product", dbProduct);
 
-        String page = new PageGenerator().getPage("editProduct.html", parametersMap);
+        String page = PageGenerator.getPage("editProduct.html", parametersMap);
         resp.getWriter().println(page);
     }
 

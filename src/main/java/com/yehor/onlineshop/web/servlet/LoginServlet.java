@@ -3,6 +3,7 @@ package com.yehor.onlineshop.web.servlet;
 import com.yehor.onlineshop.service.SecurityService;
 import com.yehor.onlineshop.web.PageGenerator;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,20 +19,19 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String page = new PageGenerator().getPage("login.html");
+        String page = PageGenerator.getPage("login.html");
         resp.getWriter().println(page);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
-        String userName = req.getParameter("username");
-        String password = req.getParameter("password");
-
-        if (userName.isEmpty() || password.isEmpty() || !securityService.credentialsValid(userName, password)) {
+        String token = securityService.loginAndGenerateToken(req.getParameter("username"), req.getParameter("password"));
+        if (token == null) {
             resp.sendRedirect("/login");
         } else {
-            resp.addCookie(securityService.createCookie());
+            Cookie cookie = new Cookie("user-token", token);
+            cookie.setMaxAge(180); // TODO magic number
+            resp.addCookie(cookie);
             resp.sendRedirect("/products");
         }
     }

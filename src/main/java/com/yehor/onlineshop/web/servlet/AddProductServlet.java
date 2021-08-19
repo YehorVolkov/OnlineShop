@@ -18,7 +18,7 @@ public class AddProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String page = new PageGenerator().getPage("addProduct.html");
+        String page = PageGenerator.getPage("addProduct.html");
         resp.getWriter().println(page);
     }
 

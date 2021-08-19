@@ -21,7 +21,7 @@ public class FindProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String page = new PageGenerator().getPage("findProduct.html");
+        String page = PageGenerator.getPage("findProduct.html");
         resp.getWriter().println(page);
     }
 
@@ -31,7 +31,7 @@ public class FindProductServlet extends HttpServlet {
         Iterable<Product> dbProducts = this.productService.findProduct(query);
         Map<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("products", dbProducts);
-        String page = new PageGenerator().getPage("searchResults.html", parametersMap);
+        String page = PageGenerator.getPage("searchResults.html", parametersMap);
         resp.getWriter().println(page);
     }
 }

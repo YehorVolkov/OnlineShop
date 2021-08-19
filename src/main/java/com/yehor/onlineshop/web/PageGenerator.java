@@ -8,20 +8,25 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PageGenerator {
 
-    private final Configuration configuration = new Configuration();
+    public static Map<String, Object> allData = new HashMap<>(); // TODO bad solution?
 
-    public String getPage(String filename, Map<String, ?> data) {
+    public static String getPage(String filename, Map<String, Object> additionalData) {
         Writer stream = new StringWriter();
         try {
+            Configuration configuration = new Configuration();
             configuration.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
             configuration.setDefaultEncoding("UTF-8");
 
             Template template = configuration.getTemplate(filename);
-            template.process(data, stream);
+            if (additionalData != null && !additionalData.isEmpty()) {
+                allData.putAll(additionalData);
+            }
+            template.process(allData, stream);
 
         } catch (IOException | TemplateException e) {
             throw new RuntimeException(e);
@@ -29,7 +34,7 @@ public class PageGenerator {
         return stream.toString();
     }
 
-    public String getPage(String filename) {
+    public static String getPage(String filename) {
         return getPage(filename, null);
     }
 }
